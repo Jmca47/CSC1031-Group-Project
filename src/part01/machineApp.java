@@ -3,7 +3,7 @@ package part01;
 public class machineApp {
 	
 	static vendingMachine myMachine = new vendingMachine();
-	// This class is used to call Vending Machine and run it.
+	// This class is used to call Vending Machine and run it
 
 	final static String options[] = { "Display Items", "Exit" };
 	final static String title = "\nBoolean Hooligans Vending Machine";
