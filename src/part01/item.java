@@ -28,7 +28,7 @@ public class item {
 	// test
 	// Returns a string containing all the info of the class
 	public String toString() {
-		String str = "Item Name: " + this.getName() + " Price: " + this.getPrice() + " Qty: " + this.getQuantity();
+		String str = "ID: "+this.getId()+ "Item Name: " + this.getName() + " Price: " + this.getPrice() + " Qty: " + this.getQuantity();
 		System.out.println(str);
 		return str;
 	}

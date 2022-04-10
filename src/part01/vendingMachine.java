@@ -2,6 +2,7 @@ package part01;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;			
 
 public class vendingMachine {
 
@@ -94,12 +95,12 @@ public class vendingMachine {
 					if (i == 0 && changeReturned[i] > 0 ) {
 						double twoPoundDBL = changeReturned[i];
 						int twoPoundInt = (int)twoPoundDBL;
-						str += twoPoundInt + " £2 returned \n";
+						str += twoPoundInt + " ï¿½2 returned \n";
 					}
 					if (i == 1 && changeReturned[i] > 0) {
 						double poundDBL = changeReturned[i];
 						int poundInt = (int)poundDBL;
-						str += poundInt + " £1 returned \n";
+						str += poundInt + " ï¿½1 returned \n";
 					}
 					if (i == 2 && changeReturned[i] > 0) {
 						double fiftyDBL = changeReturned[i];
@@ -120,6 +121,33 @@ public class vendingMachine {
 		}
 		return str;
 	}
+
+	public static void location(){
+		String [] array = {"38.9072ï¿½ N, 77.0369ï¿½ W", "51.5007ï¿½ N, 0.1246ï¿½ W", "43.7230ï¿½ N, 10.3966ï¿½ E", "40.4530ï¿½ N, 3.6883ï¿½ W", "41.3809ï¿½ N, 2.1228ï¿½ E","53.4621ï¿½ N, 2.2766ï¿½ W"};
+
+		Random rand = new Random();
+		//selects random int from the array
+		int selection = rand.nextInt(array.length);
+		
+		System.out.println("Location: " + array[selection]);
+	}
+
+	public static void currency() {
+		
+		Scanner entry = new Scanner(System.in);
+		System.out.println("Enter which currency you would like to use (ï¿½/$/ï¿½ accepted): ");
+		
+		String currency = entry.nextLine();
+		entry.close();
+		switch (currency) {
+		case "Â£":
+			System.out.println("You have chosen to pay in Pounds GDP (ï¿½)");
+			break;
+		 case "$":
+			System.out.println("You have chosen to pay in Dollars USD ($)");
+			break;
+		}
+		}
 
 	// Insert the item into the array list of items.
 	public static void insertItem(item newItem) {
