@@ -32,7 +32,7 @@ public class vendingMachine {
 
 	public vendingMachine() {
 		vendingMachine.itemData = new ArrayList<item>();
-		defaultItems(); // Function to Add default items (eg chocolate coke fanta) into machine.
+		//defaultItems(); // Function to Add default items (eg chocolate coke fanta) into machine.
 	}
 
 	/*
@@ -47,21 +47,7 @@ public class vendingMachine {
 
 	// Display the items in the machine
 	public String[] displayItems() {
-
-		File f = new File("file.txt");
-		try {
-			System.out.println(f.getCanonicalPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		storeItems();
-
 		ArrayList<item> itemData = readItemsFromCSV(csvFilePath, true);
-		for (item i : itemData) {
-			System.out.println(i);
-		}
-
 		System.out.println("\nListing all Items.");
 		String data[] = new String[itemData.size()];
 		int index = 0;
@@ -150,7 +136,7 @@ public class vendingMachine {
 	}
 
 	// return location of machine
-	public static void location() {
+	public void location() {
 		String[] array = { "38.9072� N, 77.0369� W", "51.5007� N, 0.1246� W", "43.7230� N, 10.3966� E",
 				"40.4530� N, 3.6883� W", "41.3809� N, 2.1228� E", "53.4621� N, 2.2766� W" };
 
@@ -162,18 +148,18 @@ public class vendingMachine {
 	}
 
 	// select currency
-	public static void currency() {
+	public void currency() {
 
 		Scanner entry = new Scanner(System.in);
-		System.out.println("Enter which currency you would like to use (�/$/� accepted): ");
+		System.out.println("Enter which currency you would like to use: \n1. £ \n2. $ ");
 
 		String currency = entry.nextLine();
 		entry.close();
 		switch (currency) {
-			case "£":
-				System.out.println("You have chosen to pay in Pounds GDP (�)");
+			case "1":
+				System.out.println("You have chosen to pay in Pounds GDP (£)");
 				break;
-			case "$":
+			case "2":
 				System.out.println("You have chosen to pay in Dollars USD ($)");
 				break;
 		}
@@ -340,12 +326,16 @@ public class vendingMachine {
 				String record = mySc.nextLine();
 				String[] data = record.split(",");
 
-				String name = data[0];
-				int price = Integer.parseInt(data[1]);
+				String name = data[0].trim();
+				double price = Double.parseDouble(data[1]);
 				int quantity = Integer.parseInt(data[2]);
 
+				
+
 				// Add a new tune to the array list to be returned.
-				itemData.add(new item(name, price, quantity));
+				if (!checkName(name)){
+					itemData.add(new item(name, price, quantity));
+				}
 			}
 
 			mySc.close();
@@ -357,6 +347,27 @@ public class vendingMachine {
 			return null;
 		}
 	}
+
+	private static boolean checkName(String title) {
+		boolean flag = false;
+		for (item newItem : itemData) {
+			// Get the title
+			String value = newItem.getName();
+			do {
+				if (title.equals(value)) {
+					// Matching title
+					flag = true;
+					return flag;
+				} else {
+					// The title doesn't match another title in the system
+					flag = false;
+					break;
+				}
+			} while (flag = false);
+		}
+		return flag;
+	}
+
 
 	// Store CSV File
 	public static void storeItems() {

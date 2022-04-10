@@ -1,4 +1,4 @@
-test, 123, 123,
-abc, 892, 289,
-defasdasdasd, 210392190, 120123213,
-asdasdasd, 12312321, 213213213
+Name, Price, Qty
+Coke,150.0,100
+Fanta,150.0,100
+Chocolate,200.0,100
