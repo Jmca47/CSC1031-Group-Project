@@ -2,9 +2,21 @@ package part01;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Random;			
+import java.util.Random;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class vendingMachine {
+
+	// ------------------------------------------------------------ //
+	/**
+	 * IMPORTANT
+	 * MAKE SURE TO ENTER CORRECT CSV FILE PATH OR PROGRAM WONT RUN
+	 */
+	static String csvFilePath = "Items.csv";
+	// ----------
 
 	final static String options[] = { "Customer Mode", "Management Mode", "Refill Mode", "Exit" }; // Not implemented
 																									// yet.
@@ -35,6 +47,21 @@ public class vendingMachine {
 
 	// Display the items in the machine
 	public String[] displayItems() {
+
+		File f = new File("file.txt");
+		try {
+			System.out.println(f.getCanonicalPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		storeItems();
+
+		ArrayList<item> itemData = readItemsFromCSV(csvFilePath, true);
+		for (item i : itemData) {
+			System.out.println(i);
+		}
+
 		System.out.println("\nListing all Items.");
 		String data[] = new String[itemData.size()];
 		int index = 0;
@@ -87,34 +114,34 @@ public class vendingMachine {
 					insertCoin();
 				}
 				double changeDue = moneyAdded - itemPrice;
-				System.out.println(changeDue+" change due");
+				System.out.println(changeDue + " change due");
 				double changeReturned[] = calculateChange(changeDue);
 				int i = 0;
 				// return the change due
 				while (changeReturned.length > i) {
-					if (i == 0 && changeReturned[i] > 0 ) {
+					if (i == 0 && changeReturned[i] > 0) {
 						double twoPoundDBL = changeReturned[i];
-						int twoPoundInt = (int)twoPoundDBL;
+						int twoPoundInt = (int) twoPoundDBL;
 						str += twoPoundInt + " �2 returned \n";
 					}
 					if (i == 1 && changeReturned[i] > 0) {
 						double poundDBL = changeReturned[i];
-						int poundInt = (int)poundDBL;
+						int poundInt = (int) poundDBL;
 						str += poundInt + " �1 returned \n";
 					}
 					if (i == 2 && changeReturned[i] > 0) {
 						double fiftyDBL = changeReturned[i];
-						int fiftyInt = (int)fiftyDBL;
+						int fiftyInt = (int) fiftyDBL;
 						str += fiftyInt + " 50p returned \n";
 					}
 					if (i == 3 && changeReturned[i] > 0) {
 						double twentyDBL = changeReturned[i];
-						int twentyInt = (int)twentyDBL;
+						int twentyInt = (int) twentyDBL;
 						str += twentyInt + " 20p returned \n";
 					}
 					i++;
 				}
-				System.out.println("\n"+str);
+				System.out.println("\n" + str);
 				newItem.purchase();
 				break;
 			}
@@ -122,32 +149,35 @@ public class vendingMachine {
 		return str;
 	}
 
-	public static void location(){
-		String [] array = {"38.9072� N, 77.0369� W", "51.5007� N, 0.1246� W", "43.7230� N, 10.3966� E", "40.4530� N, 3.6883� W", "41.3809� N, 2.1228� E","53.4621� N, 2.2766� W"};
+	// return location of machine
+	public static void location() {
+		String[] array = { "38.9072� N, 77.0369� W", "51.5007� N, 0.1246� W", "43.7230� N, 10.3966� E",
+				"40.4530� N, 3.6883� W", "41.3809� N, 2.1228� E", "53.4621� N, 2.2766� W" };
 
 		Random rand = new Random();
-		//selects random int from the array
+		// selects random int from the array
 		int selection = rand.nextInt(array.length);
-		
+
 		System.out.println("Location: " + array[selection]);
 	}
 
+	// select currency
 	public static void currency() {
-		
+
 		Scanner entry = new Scanner(System.in);
 		System.out.println("Enter which currency you would like to use (�/$/� accepted): ");
-		
+
 		String currency = entry.nextLine();
 		entry.close();
 		switch (currency) {
-		case "£":
-			System.out.println("You have chosen to pay in Pounds GDP (�)");
-			break;
-		 case "$":
-			System.out.println("You have chosen to pay in Dollars USD ($)");
-			break;
+			case "£":
+				System.out.println("You have chosen to pay in Pounds GDP (�)");
+				break;
+			case "$":
+				System.out.println("You have chosen to pay in Dollars USD ($)");
+				break;
 		}
-		}
+	}
 
 	// Insert the item into the array list of items.
 	public static void insertItem(item newItem) {
@@ -176,38 +206,36 @@ public class vendingMachine {
 			twenty = money / 20;
 			money = money % 20;
 
-			
 			// Always round down value
 			twenty = Math.floor(twenty);
 			fifty = Math.floor(fifty);
 			pound = Math.floor(pound);
 			twopound = Math.floor(twopound);
-			
+
 			// Append the coins returned to an array
-			if( twopound % 1 == 0) { 
+			if (twopound % 1 == 0) {
 				changeReturned[0] = twopound;
 			} else {
 				changeReturned[0] = 0;
 			}
-			
-			if( pound*1 % 1 == 0) { 
+
+			if (pound * 1 % 1 == 0) {
 				changeReturned[1] = pound;
 			} else {
 				changeReturned[1] = 0;
 			}
-			
-			if( fifty % 1 == 0) { 
+
+			if (fifty % 1 == 0) {
 				changeReturned[2] = fifty;
 			} else {
 				changeReturned[2] = 0;
 			}
-			
-			if( twenty % 1 == 0) { 
+
+			if (twenty % 1 == 0) {
 				changeReturned[3] = twenty;
 			} else {
 				changeReturned[3] = 0;
 			}
-			
 
 		} else {
 			System.out.print("Invalid entry, please try again: ");
@@ -296,6 +324,59 @@ public class vendingMachine {
 
 	public static void setMoneyAdded(int moneyAdded) {
 		vendingMachine.moneyAdded = moneyAdded;
+	}
+
+	// Load CSV File
+	public static ArrayList<item> readItemsFromCSV(String fileName, boolean hasHeader) {
+		// Vending machine Objects will be stored here and returned to calling method
+		try {
+			File myFile = new File(csvFilePath);
+			Scanner mySc = new Scanner(myFile);
+			if (hasHeader) {
+				mySc.nextLine();
+
+			}
+			while (mySc.hasNextLine()) {
+				String record = mySc.nextLine();
+				String[] data = record.split(",");
+
+				String name = data[0];
+				int price = Integer.parseInt(data[1]);
+				int quantity = Integer.parseInt(data[2]);
+
+				// Add a new tune to the array list to be returned.
+				itemData.add(new item(name, price, quantity));
+			}
+
+			mySc.close();
+			return itemData;
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			// A null object is returned in the event of any errors.
+			return null;
+		}
+	}
+
+	// Store CSV File
+	public static void storeItems() {
+		FileWriter myPw;
+		try {
+			myPw = new FileWriter(csvFilePath, true);
+			myPw.append("Name, Price, Qty\n");
+
+			for (item newItem : itemData) {
+				myPw.append(newItem.getName() + ", ");
+				myPw.append(newItem.getPrice() + ", ");
+				myPw.append(newItem.getQuantity() + "\n");
+			}
+			System.out.println("Succesfully wrote to csvFile");
+			myPw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }
