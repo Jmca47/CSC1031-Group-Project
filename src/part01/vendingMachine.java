@@ -1,6 +1,7 @@
 package part01;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Random;
 import java.io.File;
@@ -9,14 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class vendingMachine {
-
-	// ------------------------------------------------------------ //
-	/**
-	 * IMPORTANT
-	 * MAKE SURE TO ENTER CORRECT CSV FILE PATH OR PROGRAM WONT RUN
-	 */
 	static String csvFilePath = "Items.csv";
-	// ----------
+	// ---------- //
+	// Pin to enter machine
+	static int pin = 2022;
+	// ---------- //
 
 	final static String options[] = { "Customer Mode", "Management Mode", "Refill Mode", "Exit" }; // Not implemented
 																									// yet.
@@ -32,7 +30,8 @@ public class vendingMachine {
 
 	public vendingMachine() {
 		vendingMachine.itemData = new ArrayList<item>();
-		//defaultItems(); // Function to Add default items (eg chocolate coke fanta) into machine.
+		// defaultItems(); // Function to Add default items (eg chocolate coke fanta)
+		// into machine.
 	}
 
 	/*
@@ -48,6 +47,7 @@ public class vendingMachine {
 	// Display the items in the machine
 	public String[] displayItems() {
 		ArrayList<item> itemData = readItemsFromCSV(csvFilePath, true);
+		currency();
 		System.out.println("\nListing all Items.");
 		String data[] = new String[itemData.size()];
 		int index = 0;
@@ -147,21 +147,73 @@ public class vendingMachine {
 		System.out.println("Location: " + array[selection]);
 	}
 
+	public boolean checkPin() {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter Pin Code: ");
+		boolean flag = false;
+		int enteredPin = scan.nextInt();
+
+		if (enteredPin == pin) {
+			flag = true;
+		} else {
+			System.out.println("Incorrect Pin Code");
+		}
+		return flag;
+
+	}
+
 	// select currency
 	public void currency() {
-
+		readItemsFromCSV(csvFilePath, true);
 		Scanner entry = new Scanner(System.in);
 		System.out.println("Enter which currency you would like to use: \n1. £ \n2. $ ");
 
 		String currency = entry.nextLine();
-		entry.close();
 		switch (currency) {
 			case "1":
 				System.out.println("You have chosen to pay in Pounds GDP (£)");
+				changePrices(1);
 				break;
 			case "2":
 				System.out.println("You have chosen to pay in Dollars USD ($)");
+				changePrices(2);
 				break;
+		}
+	}
+
+	public void changePrices(int input) {
+		int index = 0;
+		if (input == 1) {
+			do {
+				if (index == itemData.size()) {
+					return;
+				} else {
+					for (item newItem : itemData) {
+						// Get the title
+						double oldPrice = newItem.getPrice();
+
+						newItem.setPrice(oldPrice * 0.8);
+						index++;
+					}
+				}
+			} while (index < itemData.size());
+
+		} else if (input == 2) {
+
+			do {
+				if (index == itemData.size()) {
+					return;
+				} else {
+					for (item newItem : itemData) {
+						// Get the title
+						double oldPrice = newItem.getPrice();
+
+						newItem.setPrice(oldPrice * 0.8);
+						index++;
+					}
+				}
+			} while (index < itemData.size());
+
 		}
 	}
 
@@ -312,6 +364,38 @@ public class vendingMachine {
 		vendingMachine.moneyAdded = moneyAdded;
 	}
 
+	public void addItem(String name, double price, int quantity){
+		item newItem = new item(name, price, quantity);
+
+		System.out.println("\n Add a new Item.");
+		System.out.print("Enter Name: ");
+		name = input.nextLine();
+		newItem.setName(name);
+
+		try {
+			System.out.print("Enter Price: ");
+			price = input.nextInt();
+			newItem.setPrice(price);
+			input.nextLine();
+		} catch (InputMismatchException e) {
+			System.out.println("Invalid value, must be double");
+			input.nextLine();
+		}
+
+		try {
+			System.out.print("Enter Quantity: ");
+			quantity = input.nextInt();
+			newItem.setQuantity(quantity);
+			input.nextLine();
+		} catch (InputMismatchException e) {
+			System.out.println("Invalid value, must be int");
+			input.nextLine();
+		}
+		insertItem(newItem);
+		
+	
+
+	}
 	// Load CSV File
 	public static ArrayList<item> readItemsFromCSV(String fileName, boolean hasHeader) {
 		// Vending machine Objects will be stored here and returned to calling method
@@ -330,10 +414,8 @@ public class vendingMachine {
 				double price = Double.parseDouble(data[1]);
 				int quantity = Integer.parseInt(data[2]);
 
-				
-
 				// Add a new tune to the array list to be returned.
-				if (!checkName(name)){
+				if (!checkName(name)) {
 					itemData.add(new item(name, price, quantity));
 				}
 			}
@@ -368,9 +450,8 @@ public class vendingMachine {
 		return flag;
 	}
 
-
 	// Store CSV File
-	public static void storeItems() {
+	public void storeItems() {
 		FileWriter myPw;
 		try {
 			myPw = new FileWriter(csvFilePath, true);
